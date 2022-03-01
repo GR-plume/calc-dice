@@ -42,7 +42,7 @@ const calcPow = str => {
   if(regInfinity.test(str)) throw new Error('Infinity appeared during the calculation.')
   if(regNaN.test(str)) throw new Error('NaN appeared during the calculation.')
   let rts = strReverse(str)
-  if(regPowErr.test(rts)) throw new Error('RegExp Calc Pow Error')
+  // if(regPowErr.test(rts)) throw new Error('RegExp Calc Pow Error')
   let regResult
   let roop = 0
   while((regResult = regPow.exec(rts)) !== null){
@@ -54,9 +54,8 @@ const calcPow = str => {
     const index = regResult.index
     const args = strReverse(matched).split('**')
     const result = strReverse(pow(toNum(args[0]), toNum(args[1])))
-    // 計算の結果が正の数だと+の演算子が省略されてしまい式がおかしくなるので、
-    // 結果が正の数だった場合+演算子を付け足す
-    const op = (result >= 0 && /\d/.test(rts.slice(index + matched.length).slice(0, 1)) ? '+' : '')
+    // 計算の結果が正の数だと+の演算子が省略されてしまい式がおかしくなるので、+演算子を付け足す
+    const op = (toNum(strReverse(result)) >= 0 && /\d/.test(rts.slice(index + matched.length).slice(0, 1)) ? '+' : '')
     rts = rts.slice(0, index) + result + op + rts.slice(index + matched.length)
   }
   return strReverse(rts)
@@ -91,7 +90,7 @@ const calcTimesDiv = str => {
       default:
         throw new Error('Operator Error')
     }
-    const op = (result >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
+    const op = (toNum(result) >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
     _str = _str.slice(0, index) + op + result + _str.slice(index + matched.length)
   }
   return _str
@@ -134,7 +133,7 @@ const calcPlusMinus = str => {
           throw new Error('Operator Error')
       }
     }
-    const op = (result >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
+    const op = (toNum(result) >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
     _str = _str.slice(0, index) + op + result + _str.slice(index + matched.length)
   }
   if(regInfinity.test(_str)) throw new Error('Infinity appeared during the calculation.')
@@ -162,7 +161,8 @@ const calcBrackets = str => {
     const matched = regResult[0]
     const index = regResult.index
     const result = calcFourBasic(matched.slice(1, matched.length - 1))
-    if(result < 0){
+    // 計算結果が負の数だった場合、括弧から出すときに正負の変換をする
+    if(toNum(result) < 0){
       if(_str.slice(0, index).slice(-2) === '+-' || _str.slice(0, index).slice(-2) === '-+'){
         _str = _str.slice(0, index - 2) + '+' + result.replace('-', '') + _str.slice(index + matched.length)
       }else if(_str.slice(0, index).slice(-1) === '-'){
