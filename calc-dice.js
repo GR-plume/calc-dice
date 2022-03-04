@@ -242,7 +242,7 @@ const calc = str => {
 }
 
 // ダイス 最小値は1固定 出目の内訳と合計を返す
-const dice = (roll = 1, max) => {
+const dice = (roll, max) => {
   const items = [...Array(roll)].map(() => (Math.floor(Math.random() * max) + 1))
   const result = items.reduce((p, c) => p + c, 0)
   return { items, result }
