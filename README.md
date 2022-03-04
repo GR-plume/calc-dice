@@ -14,7 +14,7 @@
 ```js
 const obj = calcDice('3d6+5')
 
-// obj = {
+// obj {
 //    show: "[2,3,6]+5",
 //    result: 16
 // }
