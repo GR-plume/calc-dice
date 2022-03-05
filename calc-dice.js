@@ -10,6 +10,7 @@ const plus = (f, s) => new dl(f).plus(s).toFixed()
 const minus = (f, s) => new dl(f).minus(s).toFixed()
 const times = (f, s) => new dl(f).times(s).toFixed()
 const div = (f, s) => new dl(f).div(s).toFixed()
+const mod = (f, s) => new dl(f).modulo(s).toFixed()
 const pow = (f, s) => new dl(f).pow(s).toFixed()
 
 // 空文字、null、booleanでもNaNを返すNumberコンストラクタ
@@ -61,17 +62,17 @@ const calcPow = str => {
   return strReverse(rts)
 }
 
-// 乗算除算(*/)の計算にマッチする
-const regTimesDiv = /(?:[+-]\d+\.\d+|[+-]\d+|\d+\.\d+|\d+)[*/](?:[+-]\d+\.\d+|[+-]\d+|\d+\.\d+|\d+)/
+// 乗算除算剰余(*/%)の計算にマッチする
+const regTimesDivMod = /(?:[+-]\d+\.\d+|[+-]\d+|\d+\.\d+|\d+)[*/%](?:[+-]\d+\.\d+|[+-]\d+|\d+\.\d+|\d+)/
 
-// 乗算除算 文字列から [数字]*[数字] か [数字]/[数字] が無くなるまでくりかえす
-const calcTimesDiv = str => {
+// 乗算除算剰余 文字列から [数字]*[数字] [数字]/[数字] [数字]%[数字] が無くなるまでくりかえす
+const calcTimesDivMod = str => {
   if(regInfinity.test(str)) throw new Error('Infinity appeared during the calculation.')
   if(regNaN.test(str)) throw new Error('NaN appeared during the calculation.')
   let _str = str
   let regResult
   let roop = 0
-  while((regResult = regTimesDiv.exec(_str)) !== null){
+  while((regResult = regTimesDivMod.exec(_str)) !== null){
     roop++
     if(roop > ROOP_MAX) throw new Error('Too many loops in while()')
     if(regInfinity.test(_str)) throw new Error('Infinity appeared during the calculation.')
@@ -86,6 +87,9 @@ const calcTimesDiv = str => {
         break;
       case '/':
         result = div(toNum(args[0]), toNum(args[2]))
+        break;
+      case '%':
+        result = mod(toNum(args[0]), toNum(args[2]))
         break;
       default:
         throw new Error('Operator Error')
@@ -141,9 +145,9 @@ const calcPlusMinus = str => {
   return _str
 }
 
-// 文字列を べき乗 -> 乗算除算 -> 加算減算 の順に置き換えていく
+// 文字列を べき乗 -> 乗算除算剰余 -> 加算減算 の順に置き換えていく
 const calcFourBasic = str => {
-  return calcPlusMinus(calcTimesDiv(calcPow(str)))
+  return calcPlusMinus(calcTimesDivMod(calcPow(str)))
 }
 
 // 1番ネストの深い括弧()にマッチする
