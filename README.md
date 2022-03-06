@@ -1,8 +1,8 @@
 # calc-dice
 
-ダイス表記(`1d100`とか`3d6`とか)の文字列を読み解いて実際に振った結果を返す関数を作りました。  
+ダイス表記（`1d100`とか`3d6`とか）の文字列を読み解いて実際に振った結果を返す関数を作りました。  
 ダイスだけじゃなく普通の計算との組み合わせもいけます。  
-(例えば`1d100+15`とか`3d6-1d6`とか)  
+（例えば`1d100+15`とか`3d6-1d6`とか）  
 
 使えるのは[グループ化演算子 `( )` ](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Grouping)と[算術演算子 `+-*/%` ](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators#arithmetic_operators)のみです。  
 一応`NaN`, `Infinity`にも対応しています。  

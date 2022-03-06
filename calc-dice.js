@@ -1,5 +1,3 @@
-'use strict'
-
 // you need to import decimal.js
 const dl = Decimal.clone()
 
