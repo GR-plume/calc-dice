@@ -50,7 +50,7 @@ const calcPow = str => {
     if (/NaN/.test(result)) return NaN
 
     // 計算の結果が正の数だと+の演算子が省略されてしまい式がおかしくなるので、+演算子を付け足す
-    const op = (toNum(strReverse(result)) >= 0 && /\d/.test(rts.slice(index + matched.length).slice(0, 1)) ? '+' : '')
+    const op = (toNum(strReverse(result)) >= 0 && /\d|\)|y/.test(rts.slice(index + matched.length).slice(0, 1)) ? '+' : '')
     rts = rts.slice(0, index) + result + op + rts.slice(index + matched.length)
   }
 
@@ -74,7 +74,7 @@ const calcTimesDivMod = str => {
 
     const matched = regResult[0]
     const index = regResult.index
-    const args = matched.split(/([*/])/g)
+    const args = matched.split(/([*/%])/g)
 
     let result
     switch (args[1]) {
@@ -92,7 +92,7 @@ const calcTimesDivMod = str => {
     }
     if (/NaN/.test(result)) return NaN
 
-    const op = (toNum(result) >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
+    const op = (toNum(result) >= 0 && /\d|\)|y/.test([..._str][index - 1]) ? '+' : '')
     _str = _str.slice(0, index) + op + result + _str.slice(index + matched.length)
   }
 
@@ -125,7 +125,7 @@ const calcPlusMinus = str => {
       const args = matched.split('-+')
       result = minus(toNum(args[0]), toNum(args[1]))
     } else {
-      const args = matched.split(/((?<=\d)[+-])/g)
+      const args = matched.split(/((?<=\d|y)[+-])/g)
       switch (args[1]) {
         case '+':
           result = plus(toNum(args[0]), toNum(args[2]))
@@ -139,7 +139,7 @@ const calcPlusMinus = str => {
     }
     if (/NaN/.test(result)) return NaN
 
-    const op = (toNum(result) >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
+    const op = (toNum(result) >= 0 && /\d|\)|y/.test([..._str][index - 1]) ? '+' : '')
     _str = _str.slice(0, index) + op + result + _str.slice(index + matched.length)
   }
 
@@ -226,7 +226,7 @@ const fixExponential = str => {
       continue;
     }
 
-    if (/\d|\)/.test([..._str][index - 1])) {
+    if (/\d|\)|y/.test([..._str][index - 1])) {
       _str = _str.slice(0, index) + '+' + result + _str.slice(index + matched.length)
       continue;
     }
