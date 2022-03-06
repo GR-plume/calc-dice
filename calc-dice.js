@@ -15,7 +15,7 @@ const pow = (f, s) => new dl(f).pow(s).toFixed()
 
 // 空文字、null、booleanでもNaNを返すNumberコンストラクタ
 const toNum = v => {
-  if(v === '' || v === null || typeof v === 'boolean') return NaN
+  if (v === '' || v === null || typeof v === 'boolean') return NaN
   return Number(v)
 }
 
@@ -34,22 +34,22 @@ const strReverse = str => [...str].reverse().join('')
 
 // べき乗の計算 文字列から [数字]**[数字] が無くなるまでくりかえす
 const calcPow = str => {
-  if(/NaN/.test(str)) return NaN
+  if (/NaN/.test(str)) return NaN
 
   let rts = strReverse(str)
   let regResult
   let roop = 0
 
-  while((regResult = regPow.exec(rts)) !== null){
+  while ((regResult = regPow.exec(rts)) !== null) {
     roop++
-    if(roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
     const args = strReverse(matched).split('**')
 
     const result = strReverse(pow(toNum(args[0]), toNum(args[1])))
-    if(/NaN/.test(result)) return NaN
+    if (/NaN/.test(result)) return NaN
 
     // 計算の結果が正の数だと+の演算子が省略されてしまい式がおかしくなるので、+演算子を付け足す
     const op = (toNum(strReverse(result)) >= 0 && /\d/.test(rts.slice(index + matched.length).slice(0, 1)) ? '+' : '')
@@ -64,22 +64,22 @@ const regTimesDivMod = /(?:[+-]\d+\.\d+|[+-]\d+|\d+\.\d+|\d+|[+-]Infinity|Infini
 
 // 乗算除算剰余 文字列から [数字]*[数字] [数字]/[数字] [数字]%[数字] が無くなるまでくりかえす
 const calcTimesDivMod = str => {
-  if(/NaN/.test(str)) return NaN
+  if (/NaN/.test(str)) return NaN
 
   let _str = str
   let regResult
   let roop = 0
 
-  while((regResult = regTimesDivMod.exec(_str)) !== null){
+  while ((regResult = regTimesDivMod.exec(_str)) !== null) {
     roop++
-    if(roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
     const args = matched.split(/([*/])/g)
 
     let result
-    switch (args[1]){
+    switch (args[1]) {
       case '*':
         result = times(toNum(args[0]), toNum(args[2]))
         break;
@@ -92,7 +92,7 @@ const calcTimesDivMod = str => {
       default:
         throw new Error('Operator Error')
     }
-    if(/NaN/.test(result)) return NaN
+    if (/NaN/.test(result)) return NaN
 
     const op = (toNum(result) >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
     _str = _str.slice(0, index) + op + result + _str.slice(index + matched.length)
@@ -106,29 +106,29 @@ const regPlusMinus = /(?:[+-]\d+\.\d+|[+-]\d+|\d+\.\d+|\d+|[+-]Infinity|Infinity
 
 // 加算減算 文字列から [数字]+[数字] か [数字]-[数字] が無くなるまでくりかえす
 const calcPlusMinus = str => {
-  if(/NaN/.test(str)) return NaN
+  if (/NaN/.test(str)) return NaN
 
   let _str = str
   let regResult
   let roop = 0
 
-  while((regResult = regPlusMinus.exec(_str)) !== null){
+  while ((regResult = regPlusMinus.exec(_str)) !== null) {
     roop++
-    if(roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
 
     let result
-    if(/\+\-/.test(matched)){
+    if (/\+\-/.test(matched)) {
       const args = matched.split('+')
       result = plus(toNum(args[0]), toNum(args[1]))
-    }else if(/\-\+/.test(matched)){
+    } else if (/\-\+/.test(matched)) {
       const args = matched.split('-+')
       result = minus(toNum(args[0]), toNum(args[1]))
-    }else{
+    } else {
       const args = matched.split(/((?<=\d)[+-])/g)
-      switch (args[1]){
+      switch (args[1]) {
         case '+':
           result = plus(toNum(args[0]), toNum(args[2]))
           break;
@@ -139,7 +139,7 @@ const calcPlusMinus = str => {
           throw new Error('Operator Error')
       }
     }
-    if(/NaN/.test(result)) return NaN
+    if (/NaN/.test(result)) return NaN
 
     const op = (toNum(result) >= 0 && /\d|\)/.test([..._str][index - 1]) ? '+' : '')
     _str = _str.slice(0, index) + op + result + _str.slice(index + matched.length)
@@ -149,7 +149,7 @@ const calcPlusMinus = str => {
 }
 
 // 文字列を べき乗 -> 乗算除算剰余 -> 加算減算 の順に置き換えていく
-const calcFourBasic = str => {
+const calcBasic = str => {
   return calcPlusMinus(calcTimesDivMod(calcPow(str)))
 }
 
@@ -159,30 +159,30 @@ const regBrackets = /\([^()]+\)/
 // 括弧の中身を四則演算した結果に置き換えていく
 // 括弧が無くなるまでくりかえし、最後に括弧が無くなった式を計算する
 const calcBrackets = str => {
-  if(/NaN/.test(str)) return NaN
+  if (/NaN/.test(str)) return NaN
 
   let _str = str
   let regResult
   let roop = 0
 
-  while((regResult = regBrackets.exec(_str)) !== null){
+  while ((regResult = regBrackets.exec(_str)) !== null) {
     roop++
-    if(roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
 
-    const result = calcFourBasic(matched.slice(1, matched.length - 1))
-    if(/NaN/.test(result)) return NaN
+    const result = calcBasic(matched.slice(1, matched.length - 1))
+    if (/NaN/.test(result)) return NaN
 
     // 計算結果が負の数だった場合、括弧から出すときに正負の変換をする
-    if(toNum(result) < 0){
-      if(_str.slice(0, index).slice(-2) === '+-' || _str.slice(0, index).slice(-2) === '-+'){
+    if (toNum(result) < 0) {
+      if (_str.slice(0, index).slice(-2) === '+-' || _str.slice(0, index).slice(-2) === '-+') {
         _str = _str.slice(0, index - 2) + '+' + result.replace('-', '') + _str.slice(index + matched.length)
         continue;
       }
 
-      if(_str.slice(0, index).slice(-1) === '-'){
+      if (_str.slice(0, index).slice(-1) === '-') {
         _str = _str.slice(0, index - 1) + '+' + result.replace('-', '') + _str.slice(index + matched.length)
         continue;
       }
@@ -194,7 +194,7 @@ const calcBrackets = str => {
     _str = _str.slice(0, index) + result + _str.slice(index + matched.length)
   }
 
-  return calcFourBasic(_str)
+  return calcBasic(_str)
 }
 
 // 指数表記(1e+9とか)にマッチする
@@ -202,24 +202,24 @@ const regExponential = /(?:[+-]\d+\.\d+|[+-]\d+|\d+\.\d+|\d+)e(?:[+-]\d+|\d+)/
 
 // 指数表記を元の値に戻す
 const fixExponential = str => {
-  if(/NaN/.test(str)) return NaN
+  if (/NaN/.test(str)) return NaN
 
   let _str = str
   let regResult
   let roop = 0
 
-  while((regResult = regExponential.exec(_str)) !== null){
+  while ((regResult = regExponential.exec(_str)) !== null) {
     roop++
-    if(roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
 
     const result = new dl(matched).toFixed()
-    if(/NaN/.test(result)) return NaN
+    if (/NaN/.test(result)) return NaN
 
-    if(result < 0){
-      if(_str.slice(0, index).slice(-1) === '-'){
+    if (result < 0) {
+      if (_str.slice(0, index).slice(-1) === '-') {
         _str = _str.slice(0, index - 1) + '+' + result.replace('-', '') + _str.slice(index + matched.length)
         continue;
       }
@@ -228,7 +228,7 @@ const fixExponential = str => {
       continue;
     }
 
-    if(/\d|\)/.test([..._str][index - 1])){
+    if (/\d|\)/.test([..._str][index - 1])) {
       _str = _str.slice(0, index) + '+' + result + _str.slice(index + matched.length)
       continue;
     }
@@ -261,29 +261,29 @@ const testInvalidOperator = str => {
 
 // 文字列の計算の統括
 const calc = str => {
-  if(str === '') throw new Error(`Invalid argument: '' (Empty String)`)
-  if(!str) throw new Error(`Invalid argument: ${str}`)
-  if(typeof str !== 'string') throw new Error(`Invalid argument: ${str}`)
+  if (str === '') throw new Error(`Invalid argument: '' (Empty String)`)
+  if (!str) throw new Error(`Invalid argument: ${str}`)
+  if (typeof str !== 'string') throw new Error(`Invalid argument: ${str}`)
 
-  if(/[Na]/.test(str.replace(/NaN/g, ''))) throw new Error('The formula contains invalid characters')
-  if(/(?<!^|\(|\+|-|\*|\/|%)NaN(?!$|\)|\+|-|\*|\/|%)/.test(str)) throw new Error('The formula contains invalid operators')
-  if(/NaN/.test(str)) return NaN
+  if (/[Na]/.test(str.replace(/NaN/g, ''))) throw new Error('The formula contains invalid characters')
+  if (/(?<!^|\(|\+|-|\*|\/|%)NaN(?!$|\)|\+|-|\*|\/|%)/.test(str)) throw new Error('The formula contains invalid operators')
+  if (/NaN/.test(str)) return NaN
 
-  if(/[Infity]/.test(str.replace(/Infinity/g, ''))) throw new Error('The formula contains invalid characters')
-  if(/(?<!^|\(|\+|-|\*|\/|%)Infinity(?!$|\)|\+|-|\*|\/|%)/.test(str)) throw new Error('The formula contains invalid operators')
+  if (/[Infity]/.test(str.replace(/Infinity/g, ''))) throw new Error('The formula contains invalid characters')
+  if (/(?<!^|\(|\+|-|\*|\/|%)Infinity(?!$|\)|\+|-|\*|\/|%)/.test(str)) throw new Error('The formula contains invalid operators')
 
-  if(regExponentialErr.test(str)) throw new Error('RegExp Exponential Error')
+  if (regExponentialErr.test(str)) throw new Error('RegExp Exponential Error')
   const fixed = fixExponential(str)
 
   // べき乗の記号は^でもあるので**に置き換える
   const replacedPow = fixed.replace('^', '**')
 
-  if(regInvalidChar.test(replacedPow)) throw new Error('The formula contains invalid characters')
-  if(testInvalidOperator(replacedPow)) throw new Error('The formula contains invalid operators')
+  if (regInvalidChar.test(replacedPow)) throw new Error('The formula contains invalid characters')
+  if (testInvalidOperator(replacedPow)) throw new Error('The formula contains invalid operators')
 
   const result = calcBrackets(replacedPow)
 
-  if(/\(|\)/.test(result)) throw new Error('Brackets Error')
+  if (/\(|\)/.test(result)) throw new Error('Brackets Error')
 
   return new dl(result).toNumber()
 }
@@ -306,9 +306,9 @@ const replaceDice = str => {
   let regResult
   let roop = 0
 
-  while((regResult = regDice.exec(_str)) !== null){
+  while ((regResult = regDice.exec(_str)) !== null) {
     roop++
-    if(roop > ROOP_MAX) throw new Error('Too many loops in while(){}')
+    if (roop > ROOP_MAX) throw new Error('Too many loops in while(){}')
 
     const matched = regResult[0]
     const index = regResult.index
