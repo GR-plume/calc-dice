@@ -3,9 +3,7 @@
 // you need to import decimal.js
 const dl = Decimal.clone()
 
-dl.DEBUG = true
-
-// decimal.jsを使った四則演算
+// decimal.jsを使った算術演算
 const plus = (f, s) => new dl(f).plus(s).toFixed()
 const minus = (f, s) => new dl(f).minus(s).toFixed()
 const times = (f, s) => new dl(f).times(s).toFixed()
@@ -156,7 +154,7 @@ const calcBasic = str => {
 // 1番ネストの深い括弧()にマッチする
 const regBrackets = /\([^()]+\)/
 
-// 括弧の中身を四則演算した結果に置き換えていく
+// 括弧の中身を算術演算した結果に置き換えていく
 // 括弧が無くなるまでくりかえし、最後に括弧が無くなった式を計算する
 const calcBrackets = str => {
   if (/NaN/.test(str)) return NaN
@@ -259,6 +257,22 @@ const testInvalidOperator = str => {
   )
 }
 
+// 括弧のエラーをテストする
+const testBracketsErr = str => {
+  let _str = str
+  let regResult
+  let roop = 0
+
+  while ((regResult = regBrackets.exec(_str)) !== null) {
+    roop++
+    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
+
+    _str = _str.replace(regBrackets, '')
+  }
+
+  return /\(|\)/.test(_str)
+}
+
 // 文字列の計算の統括
 const calc = str => {
   if (str === '') throw new Error(`Invalid argument: '' (Empty String)`)
@@ -272,6 +286,8 @@ const calc = str => {
   if (/[Infity]/.test(str.replace(/Infinity/g, ''))) throw new Error('The formula contains invalid characters')
   if (/(?<!^|\(|\+|-|\*|\/|%)Infinity(?!$|\)|\+|-|\*|\/|%)/.test(str)) throw new Error('The formula contains invalid operators')
 
+  if (testBracketsErr(str)) throw new Error('Brackets Error')
+
   if (regExponentialErr.test(str)) throw new Error('RegExp Exponential Error')
   const fixed = fixExponential(str)
 
@@ -282,8 +298,6 @@ const calc = str => {
   if (testInvalidOperator(replacedPow)) throw new Error('The formula contains invalid operators')
 
   const result = calcBrackets(replacedPow)
-
-  if (/\(|\)/.test(result)) throw new Error('Brackets Error')
 
   return new dl(result).toNumber()
 }
