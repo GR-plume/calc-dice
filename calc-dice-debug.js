@@ -14,7 +14,7 @@ const toNum = v => {
   return Number(v)
 }
 
-const ROOP_MAX = 99
+const LOOP_MAX = 99
 
 const regPow = /(?:\d+\.\d+[+-]|\d+[+-]|\d+\.\d+|\d+|ytinifnI[+-]|ytinifnI)\*\*(?:\d+\.\d+|\d+|ytinifnI)/
 
@@ -25,11 +25,11 @@ const calcPow = str => {
 
   let rts = strReverse(str)
   let regResult
-  let roop = 0
+  let loop = 0
 
   while ((regResult = regPow.exec(rts)) !== null) {
-    roop++
-    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    loop++
+    if (loop > LOOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
@@ -53,11 +53,11 @@ const calcTimesDivMod = str => {
 
   let _str = str
   let regResult
-  let roop = 0
+  let loop = 0
 
   while ((regResult = regTimesDivMod.exec(_str)) !== null) {
-    roop++
-    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    loop++
+    if (loop > LOOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
@@ -94,11 +94,11 @@ const calcPlusMinus = str => {
 
   let _str = str
   let regResult
-  let roop = 0
+  let loop = 0
 
   while ((regResult = regPlusMinus.exec(_str)) !== null) {
-    roop++
-    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    loop++
+    if (loop > LOOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
@@ -144,11 +144,11 @@ const calcBrackets = str => {
 
   let _str = str
   let regResult
-  let roop = 0
+  let loop = 0
 
   while ((regResult = regBrackets.exec(_str)) !== null) {
-    roop++
-    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    loop++
+    if (loop > LOOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
@@ -188,11 +188,11 @@ const fixExponential = str => {
 
   let _str = str
   let regResult
-  let roop = 0
+  let loop = 0
 
   while ((regResult = regExponential.exec(_str)) !== null) {
-    roop++
-    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    loop++
+    if (loop > LOOP_MAX) throw new Error('Too many loops in while()')
 
     const matched = regResult[0]
     const index = regResult.index
@@ -245,11 +245,11 @@ const testInvalidOperator = str => {
 const testBracketsErr = str => {
   let _str = str
   let regResult
-  let roop = 0
+  let loop = 0
 
   while ((regResult = regBrackets.exec(_str)) !== null) {
-    roop++
-    if (roop > ROOP_MAX) throw new Error('Too many loops in while()')
+    loop++
+    if (loop > LOOP_MAX) throw new Error('Too many loops in while()')
 
     _str = _str.replace(regBrackets, '')
   }
@@ -296,11 +296,11 @@ const replaceDice = str => {
   let _str = str
   let show = str
   let regResult
-  let roop = 0
+  let loop = 0
 
   while ((regResult = regDice.exec(_str)) !== null) {
-    roop++
-    if (roop > ROOP_MAX) throw new Error('Too many loops in while(){}')
+    loop++
+    if (loop > LOOP_MAX) throw new Error('Too many loops in while(){}')
 
     const matched = regResult[0]
     const index = regResult.index

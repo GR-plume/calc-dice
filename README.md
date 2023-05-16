@@ -4,7 +4,7 @@
 ダイスだけじゃなく普通の計算との組み合わせもいけます。  
 （例えば`1d100+15`とか`3d6-1d6`とか）  
 
-使えるのは[グループ化演算子 `( )` ](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Grouping)と[算術演算子 `+-*/%` ](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators#arithmetic_operators)のみです。  
+使えるのは[グループ化演算子 `( )` ](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Grouping)と[算術演算子 `+-*/%**` ](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators#arithmetic_operators)のみです。  
 一応`NaN`, `Infinity`にも対応しています。  
 
 文字列の計算式を実際に計算するにあたって`eval`や`return new Function()`といった危なそうな方法は使っていません。  
